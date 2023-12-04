@@ -1,4 +1,4 @@
-package org.yana.models;
+package org.yana.persistance;
 
 public enum Role {
     SELLER, BUYER

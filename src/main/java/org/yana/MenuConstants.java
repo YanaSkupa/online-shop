@@ -12,4 +12,12 @@ public class MenuConstants {
             "3- Back",
     };
 
+    public static final String[] SELLER_MENU = {
+            "1- Back"
+    };
+
+    public static final String[] BUYER_MENU = {
+            "1- Back"
+    };
+
 }
