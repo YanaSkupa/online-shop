@@ -4,13 +4,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ServiceFactory {
-    private Map<String, Service> services = new HashMap<>();
+    public static ServiceFactory INSTANCE;
+    private final Map<String, Service> services = new HashMap<>();
 
-    {
-        services.put("registrationService", new RegistrationService());
+    public static ServiceFactory getInstance() {
+        ServiceFactory localInstance = INSTANCE;
+        if (localInstance == null) {
+            synchronized (ServiceFactory.class) {
+                localInstance = INSTANCE;
+                if (localInstance == null) {
+                    localInstance = INSTANCE = new ServiceFactory();
+                }
+            }
+        }
+        return localInstance;
     }
-
-    public Service getService(String serviceName) {
-        return services.get(serviceName);
+    public AuthService getAuthService() {
+        AuthService service = (AuthService) services.putIfAbsent("authService", new AuthService());
+        if (service == null) {
+            return (AuthService) services.get("authService");
+        }
+        return service;
+    }
+    public BuyerService getBuyerService() {
+        BuyerService service = (BuyerService) services.putIfAbsent("buyerService", new BuyerService());
+        if (service == null) {
+            return (BuyerService) services.get("buyerService");
+        }
+        return service;
+    }
+    public SellerService getSellerService() {
+        SellerService service = (SellerService) services.putIfAbsent("sellerService", new SellerService());
+        if (service == null) {
+            return (SellerService) services.get("sellerService");
+        }
+        return service;
     }
 }

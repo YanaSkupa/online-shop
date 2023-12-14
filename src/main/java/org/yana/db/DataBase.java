@@ -1,29 +1,40 @@
 package org.yana.db;
 
+
 import org.yana.persistance.ObjectWithData;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public interface DataBase {
+import static org.yana.db.DbCollectionNames.SHOP_DB_COLLECTION;
+import static org.yana.db.DbCollectionNames.USERS_DB_COLLECTION;
 
-    ObjectWithData saveNewEntity(DbCollectionNames collectionName, ObjectWithData value);
+public class DataBase{
 
-    void saveButch(DbCollectionNames collectionName, List<ObjectWithData> values);
+    public static DataBase INSTANCE;
 
-    ObjectWithData getEntity(DbCollectionNames collectionName, UUID id);
+    public DataBase() {
+        loadDataCollections();
+    }
 
-    List<ObjectWithData> getAllEntities(DbCollectionNames collectionName);
+    public static DataBase getInstance() {
+        DataBase localInstance = INSTANCE;
+        if (localInstance == null) {
+            synchronized (DataBase.class) {
+                localInstance = INSTANCE;
+                if (localInstance == null) {
+                    localInstance = INSTANCE = new DataBase();
+                }
+            }
+        }
+        return localInstance;
+    }
 
-    ObjectWithData updateEntity(DbCollectionNames collectionName, UUID id, ObjectWithData value);
+    public final Map<DbCollectionNames, Map<UUID, ObjectWithData>> data = new HashMap<>();
 
-    List<ObjectWithData> updateMany(DbCollectionNames collectionName, Map<UUID, ObjectWithData> values);
-
-    boolean isEntityExists(DbCollectionNames collectionName, UUID id);
-
-    void deleteEntity(DbCollectionNames collectionName, UUID id);
-
-    //    method for look at state of DB, only for debug
-    Map<DbCollectionNames, Map<UUID, ObjectWithData>> getData();
+    private void loadDataCollections() {
+        data.put(USERS_DB_COLLECTION, new HashMap<>());
+        data.put(SHOP_DB_COLLECTION, new HashMap<>());
+    }
 }
